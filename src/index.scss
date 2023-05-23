@@ -1,0 +1,46 @@
+@import "~bootstrap/scss/bootstrap";
+
+table.table thead > tr > th.sorting:before {
+  bottom: 50%;
+  content: "▲";
+}
+
+table.table thead > tr {
+  & > th.sorting {
+    cursor: pointer;
+    padding-right: 16px;
+    position: relative;
+
+    &:before,
+    &:after {
+      display: block;
+      font-size: 0.8em;
+      line-height: 9px;
+      //opacity: 0.125;
+      opacity: 0;
+      position: absolute;
+      right: 2px;
+    }
+    &:hover:before,
+    &:hover:after {
+      opacity: 0.125;
+    }
+    &:before {
+      bottom: 50%;
+      content: "▲";
+    }
+    &:after {
+      content: "▼";
+      top: 50%;
+    }
+
+    &.sorting_asc:before,
+    &.sorting_desc:after {
+      opacity: 0.6;
+    }
+    &.sorting_desc:before,
+    &.sorting_asc:after {
+      opacity: 0.125;
+    }
+  }
+}
