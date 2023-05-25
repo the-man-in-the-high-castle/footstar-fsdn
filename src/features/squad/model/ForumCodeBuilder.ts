@@ -3,7 +3,7 @@ import {
   MatchOrdersStatuses,
   PositionTypeGeneralEnum
 } from "../../../api/contracts";
-import { SquadItem } from "../squadSlice";
+import { SquadItem } from "../Squad.model";
 
 class ForumCodeBuilder {
   build(props: {

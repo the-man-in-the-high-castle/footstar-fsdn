@@ -1,26 +1,52 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Fragment } from "react";
+import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { ClubAgeCategoryDTO } from "../api/contracts";
+import { useAppSelector } from "../app/hooks";
+import { selectManagerClubs } from "../features/user/userSlice";
 
 export default function Header() {
+  const clubs = useAppSelector(selectManagerClubs);
+  const club = useAppSelector((state) => state.squad.club);
+
   return (
-    <Navbar bg="primary" variant="dark" expand="sm">
+    <Navbar bg="primary" variant="dark" expand="sm" className="bg-gradient">
       <Container>
-        <Navbar.Brand href="/">FSDN</Navbar.Brand>
+        <Navbar.Brand href="/">
+          <Image src="/img/logo_footstar.png" height={40} />
+        </Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">
+          FSDN <small>(Beta)</small>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/squad">Squad</Nav.Link>
-            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown> */}
+            <NavDropdown title="Clubs" id="basic-nav-dropdown">
+              {clubs.map((c) => (
+                <Fragment key={c.clubId}>
+                  <NavDropdown.Item
+                    as={Link}
+                    to={`/squad/${c.clubId}`}
+                    active={
+                      club.clubId === c.clubId &&
+                      club.ageCategory === ClubAgeCategoryDTO.Main
+                    }
+                  >
+                    {c.clubName}
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={Link}
+                    to={`/youth/${c.clubId}`}
+                    active={
+                      club.clubId === c.clubId &&
+                      club.ageCategory === ClubAgeCategoryDTO.U19
+                    }
+                  >
+                    {c.clubName} U19
+                  </NavDropdown.Item>
+                </Fragment>
+              ))}
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -2,10 +2,35 @@ export interface SquadDTO {
   slotDate: SlotDateDTO;
   players: SqaudPlayerDTO[];
   matches: SquadMatchDTO[];
+  club: FsdnSquadClubDTO;
+  permissions?: FsdnSquadPermissionsDTO;
+
+  /// TODO: move
   dictionaries: {
     experience: string[];
     confidence: string[];
   };
+}
+
+export interface FsdnSquadPermissionsDTO {
+  startingEleven: boolean;
+  training: boolean;
+}
+
+export type FsdnSquadClubDTO = {
+  clubId: number;
+  ageCategory: ClubAgeCategoryDTO;
+  name: string;
+};
+
+export enum ClubAgeCategoryDTO {
+  Main = 0,
+  U19 = 1
+}
+
+export interface SquadClubKey {
+  clubId: number;
+  ageCategory: number;
 }
 
 export interface SquadMatchDTO {
@@ -66,7 +91,7 @@ export interface WeekTrainingDTO {
       SocializeType,
       SocializeType,
       SocializeType,
-      SocializeType,
+      SocializeType
     ];
   };
   lastChanged?: string;
@@ -74,7 +99,7 @@ export interface WeekTrainingDTO {
 }
 export enum SocializeType {
   StayAlone = 0,
-  Socialize = 1,
+  Socialize = 1
 }
 
 export enum MatchOrdersStatuses {
@@ -82,7 +107,7 @@ export enum MatchOrdersStatuses {
   NO_MANAGER_ORDERS = "NO_MANAGER_ORDERS",
   NOT_SET = "NOT_SET",
   OK = "OK",
-  BOT = "BOT",
+  BOT = "BOT"
 }
 
 export enum ConfidenceEnum {
@@ -92,12 +117,40 @@ export enum ConfidenceEnum {
   Average,
   High,
   VeryHigh,
-  Exaggerated,
+  Exaggerated
 }
 
 export enum PositionTypeGeneralEnum {
   GK = 0,
   D,
   M,
-  F,
+  F
+}
+
+// MANAGER
+
+export interface FsdnUserDTO {
+  userId: number;
+  managerInClubs: FsdnClubManagerDTO[];
+}
+
+export type FsdnClubManagerDTO = {
+  readonly playerId: number;
+  readonly clubId: number;
+  readonly clubName: string;
+  readonly isBteam: boolean;
+  readonly isMainManager: boolean;
+  readonly permissions?: FsdnClubPermissionsDTO;
+};
+
+export interface FsdnClubPermissionsDTO {
+  contracts: boolean;
+  startingEleven: boolean;
+  training: boolean;
+  teamTalks: boolean;
+  friendlies: boolean;
+  teamForum: boolean;
+  trips: boolean;
+  buyPlayers: boolean;
+  youthTeams: boolean;
 }

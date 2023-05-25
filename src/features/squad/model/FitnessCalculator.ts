@@ -5,15 +5,14 @@ import { WeekTraining } from "./WeekTraining";
 export class FitnessCalculator {
   constructor(
     private readonly currentDate: SlotDate,
-    private readonly resultDate: SlotDate,
+    private readonly resultDate: SlotDate
   ) {}
 
   calculate(
     { fitness, training }: { fitness?: number; training: WeekTrainingDTO },
-    todayPrevTraining: number[],
+    todayPrevTraining: number[]
   ) {
     if (!fitness) return fitness;
-
     if (!training) return;
 
     let result = fitness;
@@ -23,6 +22,8 @@ export class FitnessCalculator {
     let prevTrainings = [...todayPrevTraining];
 
     let date = this.currentDate;
+    // console.log(date, this.resultDate);
+
     while (!date.equals(this.resultDate)) {
       date = date.next();
       if (date.slot === 0) prevTrainings = [];

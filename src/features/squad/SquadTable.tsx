@@ -5,31 +5,42 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  Row,
   SortingFnOption,
   SortingState,
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable
 } from "@tanstack/react-table";
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { MatchItemDTO, MatchItemsDTO } from "../../api/contracts";
+import {
+  FsdnSquadPermissionsDTO,
+  MatchItemDTO,
+  MatchItemsDTO
+} from "../../api/contracts";
 import { MatchOrders } from "./MatchOrders";
-import { SquadItem } from "./squadSlice";
+import { RTable } from "./RTable";
+import { SquadItem } from "./Squad.model";
+
+const fsServerUrl = "https://www.footstar.org";
+
+type SquadTableProps = {
+  players: SquadItem[];
+  minMorale: number;
+  minFitness: number;
+  minItems: number;
+  permissions: FsdnSquadPermissionsDTO;
+};
 
 export function SquadTable({
   players,
   minMorale,
   minFitness,
-  minItems
-}: {
-  players: SquadItem[];
-  minMorale: number;
-  minFitness: number;
-  minItems: number;
-}) {
+  minItems,
+  permissions
+}: SquadTableProps) {
   const columnHelper = createColumnHelper<TablePlayer>();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -45,57 +56,20 @@ export function SquadTable({
     data: players,
     columns,
     state: { sorting },
+    initialState: {
+      columnVisibility: {
+        matchOrders: permissions.startingEleven,
+        fitnessBeforeMatch: permissions.training
+      }
+    },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel()
   });
 
-  return (
-    <div className="table-responsive">
-      <table className="table table-sm small table-hover table-striped text-center">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="align-middle">
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  colSpan={header.colSpan}
-                  className={
-                    !header.isPlaceholder && header.column.getCanSort()
-                      ? `sorting ${
-                          { asc: "sorting_asc", desc: "sorting_desc" }[
-                            header.column.getIsSorted() as string
-                          ] ?? ""
-                        }`
-                      : ""
-                  }
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  //console.log("SquadTable", players?.length);
+
+  return <RTable table={table} />;
 
   function columnsDef() {
     return [
@@ -107,7 +81,11 @@ export function SquadTable({
         header: "Name",
         cell: (info) => (
           <PlayerLink
-            player={{ name: info.getValue(), id: info.row.original.id }}
+            player={{
+              name: info.getValue(),
+              id: info.row.original.id,
+              userId: info.row.original.userId
+            }}
           />
         )
       }),
@@ -141,7 +119,7 @@ export function SquadTable({
         )
       }),
       columnHelper.group({
-        header: "Iteams",
+        header: "Items",
         columns: [
           columnHelper.accessor((row) => row.items.shoes, {
             id: "shoes",
@@ -163,13 +141,14 @@ export function SquadTable({
           })
         ]
       }),
+
       columnHelper.accessor("matchOrders", {
         header: "Match Orders",
         cell: (info) => <MatchOrders status={info.getValue()} />
       }),
       columnHelper.accessor("fitness", {
         header: "Fitness",
-        cell: (info) => `${info.getValue()}%`
+        cell: (info) => info.getValue() && `${info.getValue()}%`
       }),
       columnHelper.accessor("fitnessBeforeMatch", {
         header: "Fitness BM",
@@ -197,9 +176,12 @@ export function SquadTable({
 type TablePlayer = SquadItem;
 const MIN_LOGIN_DAYS_WARNING = 7;
 
-const sortingItemsFn: SortingFnOption<TablePlayer> = (a, b, col) =>
-  (a.original.items[col as keyof MatchItemsDTO]?.bonus ?? 0) -
-  (b.original.items[col as keyof MatchItemsDTO]?.bonus ?? 0);
+const sortingItemsFn: SortingFnOption<TablePlayer> = (a, b, col) => {
+  return bonus(a) - bonus(b);
+  function bonus(row: Row<SquadItem>) {
+    return a.original.items[col as keyof MatchItemsDTO]?.bonus ?? 0;
+  }
+};
 
 function LastLogin({ player }: { player: TablePlayer }) {
   //console.log("LastLogin", player.lastLoginDays, typeof player.lastLoginDays);
@@ -224,6 +206,7 @@ function MarkedValue({ value, min }: { value?: number; min: number }) {
     <></>
   );
 }
+
 export function selectOptionsFrom100(count: number) {
   return [...Array(count)].map((_, index) => {
     const key = 100 - index;
@@ -234,14 +217,19 @@ export function selectOptionsFrom100(count: number) {
     );
   });
 }
-function PlayerLink({ player }: { player: { id: number; name: string } }) {
+
+function PlayerLink({
+  player: { id, name, userId }
+}: {
+  player: { id: number; name: string; userId?: number };
+}) {
   return (
     <Link
-      to={`https://www.footstar.org/player/ver_jogador.asp?jog_id=${player.id}`}
-      className="text-decoration-none"
+      to={`${fsServerUrl}/player/ver_jogador.asp?jog_id=${id}`}
+      className={`text-decoration-none${!userId ? "" : " fw-bold"}`}
       target="_blank"
     >
-      {player.name}
+      {name}
     </Link>
   );
 }
