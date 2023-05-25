@@ -179,7 +179,7 @@ const MIN_LOGIN_DAYS_WARNING = 7;
 const sortingItemsFn: SortingFnOption<TablePlayer> = (a, b, col) => {
   return bonus(a) - bonus(b);
   function bonus(row: Row<SquadItem>) {
-    return a.original.items[col as keyof MatchItemsDTO]?.bonus ?? 0;
+    return row.original.items[col as keyof MatchItemsDTO]?.bonus ?? 0;
   }
 };
 
