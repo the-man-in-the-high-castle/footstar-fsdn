@@ -50,8 +50,15 @@ const squadSlice = createSlice({
           SlotDate.fromSlot(squad.matchAfterSlot)
         );
         squad.players.forEach((p) => {
-          if (p.fitness) {
-            p.fitnessBeforeMatch = calc.calculate(p, [14, 14]);
+          if (p.fitness && p.training) {
+            p.fitnessBeforeMatch = calc.calculate(p, lastTrainings());
+          }
+
+          function lastTrainings(): number[] {
+            if (state.fsDate.slot > 1) return [];
+            return p.training.trainingBonus === 1
+              ? [p.training.lastTrainingId, 0]
+              : [p.training.lastTrainingId, p.training.lastTrainingId];
           }
         });
       }
@@ -88,7 +95,7 @@ export const fetchSquad = createAsyncThunk<
   FetchedSquad,
   SquadClubKey,
   { state: RootState }
->("squad/fetchSquad", async ({ clubId, ageCategory }, thunkAPI) => {
+>("squad/fetchSquad", async ({ clubId, ageCategory }) => {
   const { data } = await fetchSquadApi(clubId, ageCategory);
 
   const result: FetchedSquad = {

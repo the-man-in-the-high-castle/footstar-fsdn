@@ -96,6 +96,8 @@ export interface WeekTrainingDTO {
   };
   lastChanged?: string;
   minFitness: number;
+  lastTrainingId: number;
+  trainingBonus: number;
 }
 export enum SocializeType {
   StayAlone = 0,

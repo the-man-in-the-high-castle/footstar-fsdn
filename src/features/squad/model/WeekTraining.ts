@@ -1,8 +1,16 @@
 import { WeekTrainingDTO } from "../../../api/contracts";
 import { SlotDate } from "./SlotDate";
 
-export enum FitnessEnum {
+export enum TrainingAdvEnum {
   fitness = 14,
+  havingFun = 20,
+  sideLeft = 22,
+  sideRight = 23,
+  sideCenter = 24,
+  positionGk = 25,
+  positionDef = 26,
+  positionMid = 27,
+  positionFor = 28
 }
 
 export class WeekTraining {
@@ -12,7 +20,7 @@ export class WeekTraining {
     let result =
       fitness < this.week.minFitness
         ? 8
-        : fitnessChange[this.week.days[date.day].slots[date.slot]];
+        : fitnessChange[this.week.days[date.day].slots[date.slot]] ?? 0;
 
     // console.log(
     //   "fd",
@@ -25,11 +33,11 @@ export class WeekTraining {
     // fitness
     if (result === 8) {
       for (let i = date.slot - 1; i >= 0; i--) {
-        if (prevTrainings[i] !== FitnessEnum.fitness) break;
+        if (prevTrainings[i] !== TrainingAdvEnum.fitness) break;
         result += 2;
       }
 
-      prevTrainings[date.slot] = FitnessEnum.fitness;
+      prevTrainings[date.slot] = TrainingAdvEnum.fitness;
     }
 
     return result;
@@ -60,7 +68,7 @@ export enum SkillsEnum {
   marking = 31,
   setPieces = 32,
   firstTouch = 33,
-  commandOfArea = 34,
+  commandOfArea = 34
 }
 
 export const fitnessChange = {
@@ -68,5 +76,6 @@ export const fitnessChange = {
     if (!isNaN(Number(v))) acc[v as number] = -1;
     return acc;
   }, {} as Record<number, number>),
-  [FitnessEnum.fitness as number]: 8,
+  [TrainingAdvEnum.fitness as number]: 8,
+  [TrainingAdvEnum.havingFun as number]: 4
 };

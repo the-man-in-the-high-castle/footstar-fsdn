@@ -5,6 +5,9 @@ import App from "./App";
 import { store } from "./app/store";
 import "./index.scss";
 
+console.log("version", import.meta.env.VITE_VERSION);
+console.log("env", import.meta.env);
+
 const mocking = false;
 if (mocking && process.env.NODE_ENV === "development") {
   const { worker } = await import("./mocks/browser");

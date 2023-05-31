@@ -44,3 +44,88 @@ table.table thead > tr {
     }
   }
 }
+
+.position-0 {
+  background-color: #3a87ad;
+  &:hover {
+    background-color: #2d6987;
+  }
+}
+.position-1 {
+  background-color: #468847;
+  &:hover {
+    background-color: #356635;
+  }
+}
+
+.position-2 {
+  background-color: #f89406;
+  &:hover {
+    background-color: #c67605;
+  }
+}
+
+.position-3 {
+  background-color: #b94a48;
+  &:hover {
+    background-color: #953b39;
+  }
+}
+
+.position-none {
+  background-color: #f8f1f1;
+  color: #000;
+  &:hover {
+    background-color: #e9e2e2;
+  }
+}
+
+.level10 {
+  color: hsl(224, 100%, 40%);
+}
+
+.level9 {
+  color: hsl(224, 100%, 45%);
+}
+
+.level8 {
+  color: hsl(224, 100%, 50%);
+}
+
+.level7 {
+  color: hsl(224, 100%, 55%);
+}
+
+.level6 {
+  color: hsl(224, 100%, 60%);
+}
+
+.level5 {
+  color: hsl(224, 100%, 64%);
+}
+
+.level4 {
+  color: hsl(224, 100%, 68%);
+}
+
+.level3 {
+  color: hsl(224, 100%, 71%);
+}
+
+.level2 {
+  color: hsl(224, 100%, 74%);
+}
+
+.level1 {
+  color: hsl(224, 100%, 77%);
+}
+
+.level0 {
+  color: hsl(224, 100%, 79%);
+}
+
+@for $i from 1 through 9 {
+  .mw-#{$i * 100}p {
+    max-width: $i * 100px;
+  }
+}

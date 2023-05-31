@@ -24,7 +24,7 @@ import { MatchOrders } from "./MatchOrders";
 import { RTable } from "./RTable";
 import { SquadItem } from "./Squad.model";
 
-const fsServerUrl = "https://www.footstar.org";
+const fsServerUrl = import.meta.env.VITE_FS_URL;
 
 type SquadTableProps = {
   players: SquadItem[];
@@ -75,7 +75,11 @@ export function SquadTable({
     return [
       columnHelper.accessor("positionId", {
         header: "Position",
-        cell: (info) => info.row.original.position
+        cell: (info) => (
+          <span className={`badge position-${info.getValue() ?? "none"}`}>
+            {info.row.original.position}
+          </span>
+        )
       }),
       columnHelper.accessor("name", {
         header: "Name",
@@ -95,9 +99,16 @@ export function SquadTable({
         sortUndefined: 1,
         cell: (info) => <LastLogin player={info.row.original} />
       }),
-      columnHelper.accessor("experience", { header: "Experience" }),
+      columnHelper.accessor("experienceId", {
+        header: "Experience",
+        cell: (info) => (
+          <span className={`level${info.getValue()}`}>
+            {info.row.original.experience}
+          </span>
+        )
+      }),
       columnHelper.accessor("adaptability", {
-        header: "Adaptability",
+        header: () => <span title="Adaptability">Adapt</span>,
         cell: (info) => `${info.getValue()}%`
       }),
       columnHelper.accessor("clubLoyalty", {

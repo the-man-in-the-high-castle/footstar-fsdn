@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FsdnUserDTO } from "../../api/contracts";
 import { RootState } from "../../app/store";
 import { UserState } from "./user.model";
-import { fetchUserApi } from "./userAPI";
+import { fetchUserApi, loginApi } from "./userAPI";
 
 const initialState: UserState = {
   userId: 0,
@@ -23,10 +23,25 @@ const userSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.userId = action.payload.userId;
+        state.error = undefined;
 
         state.managerInClubs = action.payload.managerInClubs;
       })
       .addCase(fetchUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(login.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.userId = action.payload.userId;
+        state.error = undefined;
+        state.managerInClubs = action.payload.managerInClubs;
+      })
+      .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -47,6 +62,23 @@ export const fetchUser = createAsyncThunk<FsdnUserDTO>(
   }
 );
 
+export const login = createAsyncThunk<
+  FsdnUserDTO,
+  { username: string; password: string }
+>("user/login", async (props) => {
+  const { data } = await loginApi({
+    ...props,
+    pid: import.meta.env.VITE_FSDN_PROGRAM_ID
+  });
+
+  return {
+    ...data,
+    managerInClubs: data.managerInClubs.sort((a, b) =>
+      a.clubName.localeCompare(b.clubName)
+    )
+  };
+});
+
 export default userSlice.reducer;
 
 export const selectManagerClubs = (state: RootState) =>
@@ -62,3 +94,5 @@ export const selectManagerClub = (
 
 export const selectUserStatus = (state: RootState) => state.user.status;
 export const selectUserError = (state: RootState) => state.user.error;
+
+export const selectIsLogged = (state: RootState) => state.user.userId > 0;

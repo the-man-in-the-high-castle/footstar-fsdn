@@ -52,11 +52,11 @@ export const handlers = [
               { slots: [1, 1, 1] },
               { slots: [1, 1, 1] }
             ],
-            minFitness: 92
+            minFitness: 92,
+            lastTrainingId: 14,
+            trainingBonus: 0
           },
-          items: {
-            shirt: { bonus: 10, desc: "Speed, Acceleration" }
-          },
+          items: { shirt: { bonus: 10, desc: "Speed, Acceleration" } },
           matchOrders: MatchOrdersStatuses.NOT_SET
         },
         {
@@ -86,7 +86,9 @@ export const handlers = [
               { slots: [1, 1, 1] },
               { slots: [1, 1, 1] }
             ],
-            minFitness: 82
+            minFitness: 82,
+            lastTrainingId: 14,
+            trainingBonus: 0
           },
           items: {
             gloves: { bonus: 10, desc: "Handling" },

@@ -1,6 +1,6 @@
 import { WeekTrainingDTO } from "../../../api/contracts";
 import { SlotDate } from "./SlotDate";
-import { FitnessEnum, SkillsEnum, WeekTraining } from "./WeekTraining";
+import { SkillsEnum, TrainingAdvEnum, WeekTraining } from "./WeekTraining";
 
 describe("WeekTraining", () => {
   const week = new WeekTraining(weekDto(SkillsEnum.acceleration));
@@ -11,7 +11,7 @@ describe("WeekTraining", () => {
 
   it("One Fitness (+8)", () => {
     const dto = weekDto(SkillsEnum.agility);
-    dto.days[1].slots[1] = FitnessEnum.fitness;
+    dto.days[1].slots[1] = TrainingAdvEnum.fitness;
     const week = new WeekTraining(dto);
     expect(week.fitnessDelta(new SlotDate(1, 1), 100, [])).toEqual(8);
   });
@@ -24,47 +24,61 @@ describe("WeekTraining", () => {
     const dto = weekDto(SkillsEnum.agility);
     dto.days[1].slots = [
       SkillsEnum.agility,
-      FitnessEnum.fitness,
-      FitnessEnum.fitness,
+      TrainingAdvEnum.fitness,
+      TrainingAdvEnum.fitness
     ];
     const week = new WeekTraining(dto);
     expect(
       week.fitnessDelta(new SlotDate(1, 2), 100, [
         SkillsEnum.agility,
-        FitnessEnum.fitness,
-      ]),
+        TrainingAdvEnum.fitness
+      ])
     ).toEqual(10);
   });
 
   it("Third Fitness (+12)", () => {
     const dto = weekDto(SkillsEnum.agility);
     dto.days[1].slots = [
-      FitnessEnum.fitness,
-      FitnessEnum.fitness,
-      FitnessEnum.fitness,
+      TrainingAdvEnum.fitness,
+      TrainingAdvEnum.fitness,
+      TrainingAdvEnum.fitness
     ];
     const week = new WeekTraining(dto);
     expect(
       week.fitnessDelta(new SlotDate(1, 2), 100, [
-        FitnessEnum.fitness,
-        FitnessEnum.fitness,
-      ]),
+        TrainingAdvEnum.fitness,
+        TrainingAdvEnum.fitness
+      ])
     ).toEqual(12);
   });
 
   it("Second Auto Fitness (+10)", () => {
     expect(
-      week.fitnessDelta(new SlotDate(1, 1), 90, [FitnessEnum.fitness]),
+      week.fitnessDelta(new SlotDate(1, 1), 90, [TrainingAdvEnum.fitness])
     ).toEqual(10);
   });
 
   it("Third Auto Fitness (+12)", () => {
     expect(
       week.fitnessDelta(new SlotDate(1, 2), 90, [
-        FitnessEnum.fitness,
-        FitnessEnum.fitness,
-      ]),
+        TrainingAdvEnum.fitness,
+        TrainingAdvEnum.fitness
+      ])
     ).toEqual(12);
+  });
+
+  it("Train having fun (+4)", () => {
+    const dto = weekDto(SkillsEnum.agility);
+    dto.days[1].slots[1] = TrainingAdvEnum.havingFun;
+    const week = new WeekTraining(dto);
+    expect(week.fitnessDelta(new SlotDate(1, 1), 100, [])).toEqual(4);
+  });
+
+  it("Train position (+0)", () => {
+    const dto = weekDto(SkillsEnum.agility);
+    dto.days[1].slots[1] = TrainingAdvEnum.positionDef;
+    const week = new WeekTraining(dto);
+    expect(week.fitnessDelta(new SlotDate(1, 1), 100, [])).toEqual(0);
   });
 });
 
@@ -72,5 +86,7 @@ function weekDto(skill: number): WeekTrainingDTO {
   return {
     days: new Array(7).fill({ slots: [skill, skill, skill] }),
     minFitness: 92,
+    lastTrainingId: 0,
+    trainingBonus: 0
   };
 }

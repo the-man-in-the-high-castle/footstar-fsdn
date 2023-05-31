@@ -1,32 +1,32 @@
 // A tiny wrapper around fetch(), borrowed from
 // https://kentcdodds.com/blog/replace-axios-with-a-simple-custom-fetch-wrapper
 
-const baseApiUrl = "/community/fsdn_api.asp?method=";
+const baseApiUrl = `${import.meta.env.VITE_API_URL}${
+  import.meta.env.VITE_API_URL_PATH
+}`;
 
 export async function client<RT>(
   endpoint: RequestInfo,
   { body, ...customConfig }: RequestInit = {}
 ) {
-  const headers = { "Content-Type": "application/json" };
+  const headers = { "content-type": "application/json" };
 
   const config: RequestInit = {
     method: body ? "POST" : "GET",
     ...customConfig,
-    headers: {
-      ...headers,
-      ...customConfig.headers
-    }
+    headers: { ...headers, ...customConfig.headers }
   };
 
   if (body) {
-    config.body = JSON.stringify(body);
+    config.body = body;
   }
 
   let data;
   try {
     const response = await window.fetch(endpoint, config);
-    data = await response.json();
+
     if (response.ok) {
+      data = await response.json();
       // Return a result object similar to Axios
       return {
         status: response.status,
@@ -70,11 +70,24 @@ client.post = function <RT>(
 client.postApi = function <RT>(
   method: string,
   args = "",
-  body: BodyInit,
+  body: Record<string, unknown>,
   customConfig: RequestInit = {}
 ) {
   return client<RT>(baseApiUrl + method + (args ?? ""), {
     ...customConfig,
-    body
+    body: JSON.stringify(body)
   });
 };
+
+// export function encodePostParams(params: Record<string, unknown>) {
+//   return Object.entries(params)
+//     .filter(([, val]) => !!val)
+//     .reduce((result, [key, val]) => {
+//       // console.info(key, val);
+//       if (typeof val === "object") result.append(key, JSON.stringify(val));
+//       else result.append(key, "" + val);
+
+//       return result;
+//     }, new URLSearchParams())
+//     .toString();
+// }
