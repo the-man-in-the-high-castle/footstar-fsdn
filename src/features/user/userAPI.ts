@@ -1,8 +1,18 @@
 import { client } from "../../api/client";
-import { FsdnUserDTO } from "../../api/contracts";
+import { FsdnLoginUserDTO, FsdnUserDTO } from "../../api/contracts";
 
-export function fetchUserApi() {
-  return client.getApi<FsdnUserDTO>("user");
+export function fetchUserApi(props: {
+  userId: number;
+  pid: number;
+  token: string;
+}) {
+  console.log("fetchUserApi");
+  return client.postApi<FsdnUserDTO>(
+    `user/${props.userId}`,
+    undefined,
+    { pid: props.pid },
+    { headers: { authorization: `Bearer ${props.token}` } }
+  );
 }
 
 export function loginApi(props: {
@@ -10,5 +20,5 @@ export function loginApi(props: {
   password: string;
   pid: number;
 }) {
-  return client.postApi<FsdnUserDTO>("login", undefined, props);
+  return client.postApi<FsdnLoginUserDTO>("login", undefined, props);
 }

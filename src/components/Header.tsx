@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ClubAgeCategoryDTO } from "../api/contracts";
 import { useAppSelector } from "../app/hooks";
@@ -9,6 +10,7 @@ export default function Header() {
   const clubs = useAppSelector(selectManagerClubs);
   const club = useAppSelector((state) => state.squad.club);
   const isLogged = useAppSelector(selectIsLogged);
+  const { t } = useTranslation();
 
   return (
     <Navbar bg="primary" variant="dark" expand="sm" className="bg-gradient">
@@ -23,7 +25,7 @@ export default function Header() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {isLogged && (
-              <NavDropdown title="Clubs" id="basic-nav-dropdown">
+              <NavDropdown title={t("Clubs")} id="basic-nav-dropdown">
                 {clubs.map((c) => (
                   <Fragment key={c.clubId}>
                     <NavDropdown.Item

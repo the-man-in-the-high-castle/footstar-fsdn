@@ -10,6 +10,7 @@ import {
   selectSquad
 } from "./squadSlice";
 
+import { useTranslation } from "react-i18next";
 import { SquadTable, selectOptionsFrom100 } from "./SquadTable";
 
 export function SquadCard({
@@ -21,6 +22,7 @@ export function SquadCard({
   clubId: number | undefined;
   ageCategory: number;
 }) {
+  const { t } = useTranslation();
   const matches = useAppSelector((state) =>
     selectMatches(state, { clubId, ageCategory })
   );
@@ -81,7 +83,7 @@ export function SquadCard({
     return (
       <div className="row justify-content-end gy-1 gx-3">
         <div className="col-auto hstack gap-1 ">
-          <label className="ms-1">Fitness:</label>
+          <label className="ms-1">{t("Fitness")}:</label>
           <select
             value={minFitness}
             onChange={(e) => setMinFitness(Number(e.target.value))}
@@ -91,7 +93,7 @@ export function SquadCard({
           </select>
         </div>
         <div className="col-auto hstack gap-1">
-          <label>Morale:</label>
+          <label>{t("Morale")}:</label>
           <select
             value={minMorale}
             onChange={(e) => setMinMorale(Number(e.target.value))}
@@ -101,7 +103,7 @@ export function SquadCard({
           </select>
         </div>
         <div className="col-auto hstack gap-1">
-          <label>Items:</label>
+          <label>{t("Items")}:</label>
           <select
             value={minItems}
             onChange={(e) => setMinItems(Number(e.target.value))}

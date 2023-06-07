@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Form, Spinner } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
@@ -10,6 +11,7 @@ import {
 } from "./userSlice";
 
 export default function Login() {
+  const { t } = useTranslation();
   const userStatus = useAppSelector(selectUserStatus);
 
   const error = useAppSelector(selectUserError);
@@ -42,23 +44,21 @@ export default function Login() {
   return (
     <Card className="mw-300p mx-auto mt-3">
       <Card.Header className="bg-primary text-light bg-gradient">
-        Sign In (FSDN)
+        {t("Login.title")} (FSDN)
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handleSubmit} validated={validated} noValidate>
           <Form.Group className="mb-3" controlId="name">
-            <Form.Label>User name</Form.Label>
+            <Form.Label>{t("User name")}</Form.Label>
             <Form.Control
-              placeholder="Enter name"
               onChange={(e) => setUsername(e.target.value)}
               required={true}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="password">
-            <Form.Label>FSDN Password</Form.Label>
+            <Form.Label>{t("FSDN Password")}</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               required={true}
             />
@@ -81,7 +81,7 @@ export default function Login() {
             {userStatus === "loading" && (
               <Spinner as="span" size="sm" role="status" aria-hidden="true" />
             )}{" "}
-            Submit
+            {t("Login")}
           </Button>
         </Form>
       </Card.Body>

@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Card, Nav } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import {
@@ -10,6 +11,8 @@ import {
 export default function MainPage() {
   const clubs = useAppSelector(selectManagerClubs);
   const userError = useAppSelector(selectUserError);
+
+  const [t] = useTranslation();
 
   return (
     <Card>
@@ -24,7 +27,7 @@ export default function MainPage() {
               {" "}
               -{" "}
               <a href="/" className="text-decoration-none">
-                Back to footstar
+                {t("Back to footstar")}
               </a>
             </small>
           </div>

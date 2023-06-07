@@ -9,7 +9,7 @@ export async function client<RT>(
   endpoint: RequestInfo,
   { body, ...customConfig }: RequestInit = {}
 ) {
-  const headers = { "content-type": "application/json" };
+  const headers: HeadersInit = { "content-type": "application/json" };
 
   const config: RequestInit = {
     method: body ? "POST" : "GET",

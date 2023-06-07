@@ -41,7 +41,12 @@ export function SquadForumCode({
         </Button>
       </Card.Header>
       <Card.Body>
-        <Form.Control as="textarea" rows={10} value={forumCode} />
+        <Form.Control
+          as="textarea"
+          rows={10}
+          value={forumCode}
+          readOnly={true}
+        />
       </Card.Body>
     </Card>
   );

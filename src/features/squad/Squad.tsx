@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Spinner } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { SquadClubKey } from "../../api/contracts";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import PageHeader from "../../components/PageHeader";
 import { SquadCard } from "./SquadCard";
@@ -11,6 +12,7 @@ import {
 } from "./squadSlice";
 
 //let dev_tmp_initialized = false;
+let tmpClub: SquadClubKey | undefined;
 
 export const Squad = ({ ageCategory = 0 }: { ageCategory?: number }) => {
   let { clubId: clubIdArg } = useParams();
@@ -28,8 +30,10 @@ export const Squad = ({ ageCategory = 0 }: { ageCategory?: number }) => {
   useEffect(() => {
     if (
       clubId &&
+      (clubId !== tmpClub?.clubId || ageCategory !== tmpClub?.ageCategory) &&
       (clubId !== currentClub.clubId || ageCategory !== currentClub.ageCategory)
     ) {
+      tmpClub = { clubId, ageCategory };
       dispatch(fetchPlayersCombo(clubId, ageCategory));
     }
   }, [clubId, currentClub, dispatch, ageCategory]);

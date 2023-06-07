@@ -95,62 +95,76 @@ export const fetchSquad = createAsyncThunk<
   FetchedSquad,
   SquadClubKey,
   { state: RootState }
->("squad/fetchSquad", async ({ clubId, ageCategory }) => {
-  const { data } = await fetchSquadApi(clubId, ageCategory);
+>(
+  "squad/fetchSquad",
+  async ({ clubId, ageCategory }, { getState, dispatch }) => {
+    const userToken = getState().user.userToken;
+    if (!userToken) {
+      console.log("not logged");
+      //dispatch(logout);
+      throw Error("not logged");
+    }
+    const { data } = await fetchSquadApi({
+      clubId,
+      ageCategory,
+      pid: import.meta.env.VITE_FSDN_PROGRAM_ID,
+      token: userToken
+    });
 
-  const result: FetchedSquad = {
-    club: data.club,
-    slotDate: data.slotDate,
-    players: mapPlayers(data.players),
-    matches: data.matches,
-    permissions: data.permissions
-  };
-
-  return result;
-
-  function mapPlayers(players: SqaudPlayerDTO[]): SquadItem[] {
-    return players
-      .sort((a, b) => (a.positionId ?? 0) - (b.positionId ?? 0))
-      .map(mapPlayer);
-  }
-  function mapPlayer(p: SqaudPlayerDTO): SquadItem {
-    return {
-      ...p,
-      lastLoginDaysText: lastLoginDaysText(p),
-      squad: p.inYouthTeam ? "U19" : "Main",
-      experience: expText(p),
-      confidence: confidenceText(p),
-      confidenceProblem: hasConfidenceProblem(p),
-      matchOrders: p.matchOrders
+    const result: FetchedSquad = {
+      club: data.club,
+      slotDate: data.slotDate,
+      players: mapPlayers(data.players),
+      matches: data.matches,
+      permissions: data.permissions
     };
-  }
 
-  function lastLoginDaysText(p: SqaudPlayerDTO): string {
-    return p.userId
-      ? p.lastLoginDays !== undefined
-        ? p.lastLoginDays.toString()
-        : ""
-      : "BOT";
-  }
+    return result;
 
-  function expText(p: SqaudPlayerDTO): string {
-    return data.dictionaries.experience[p.experienceId];
-  }
+    function mapPlayers(players: SqaudPlayerDTO[]): SquadItem[] {
+      return players
+        .sort((a, b) => (a.positionId ?? 0) - (b.positionId ?? 0))
+        .map(mapPlayer);
+    }
+    function mapPlayer(p: SqaudPlayerDTO): SquadItem {
+      return {
+        ...p,
+        lastLoginDaysText: lastLoginDaysText(p),
+        squad: p.inYouthTeam ? "U19" : "Main",
+        experience: expText(p),
+        confidence: confidenceText(p),
+        confidenceProblem: hasConfidenceProblem(p),
+        matchOrders: p.matchOrders
+      };
+    }
 
-  function confidenceText(p: SqaudPlayerDTO): string {
-    return p.confidenceId
-      ? data.dictionaries.confidence[p.confidenceId - 1]
-      : "";
-  }
+    function lastLoginDaysText(p: SqaudPlayerDTO): string {
+      return p.userId
+        ? p.lastLoginDays !== undefined
+          ? p.lastLoginDays.toString()
+          : ""
+        : "BOT";
+    }
 
-  function hasConfidenceProblem(p: SqaudPlayerDTO): boolean {
-    return (
-      !!p.confidenceId &&
-      p.confidenceId !== ConfidenceEnum.High &&
-      p.confidenceId !== ConfidenceEnum.VeryHigh
-    );
+    function expText(p: SqaudPlayerDTO): string {
+      return data.dictionaries.experience[p.experienceId];
+    }
+
+    function confidenceText(p: SqaudPlayerDTO): string {
+      return p.confidenceId
+        ? data.dictionaries.confidence[p.confidenceId - 1]
+        : "";
+    }
+
+    function hasConfidenceProblem(p: SqaudPlayerDTO): boolean {
+      return (
+        !!p.confidenceId &&
+        p.confidenceId !== ConfidenceEnum.High &&
+        p.confidenceId !== ConfidenceEnum.VeryHigh
+      );
+    }
   }
-});
+);
 
 export const fetchPlayersCombo =
   (clubId: number, ageCategory: number = 0): AppThunk =>

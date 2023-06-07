@@ -14,6 +14,7 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
   FsdnSquadPermissionsDTO,
@@ -41,6 +42,7 @@ export function SquadTable({
   minItems,
   permissions
 }: SquadTableProps) {
+  const { t } = useTranslation();
   const columnHelper = createColumnHelper<TablePlayer>();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -74,7 +76,7 @@ export function SquadTable({
   function columnsDef() {
     return [
       columnHelper.accessor("positionId", {
-        header: "Position",
+        header: t("Position"),
         cell: (info) => (
           <span className={`badge position-${info.getValue() ?? "none"}`}>
             {info.row.original.position}
@@ -82,7 +84,7 @@ export function SquadTable({
         )
       }),
       columnHelper.accessor("name", {
-        header: "Name",
+        header: t("Name"),
         cell: (info) => (
           <PlayerLink
             player={{
@@ -93,14 +95,14 @@ export function SquadTable({
           />
         )
       }),
-      columnHelper.accessor("age", { header: "Age" }),
+      columnHelper.accessor("age", { header: t("Age") }),
       columnHelper.accessor("lastLoginDays", {
-        header: "Last Login",
+        header: t("Last Login"),
         sortUndefined: 1,
         cell: (info) => <LastLogin player={info.row.original} />
       }),
       columnHelper.accessor("experienceId", {
-        header: "Experience",
+        header: t("Experience"),
         cell: (info) => (
           <span className={`level${info.getValue()}`}>
             {info.row.original.experience}
@@ -108,19 +110,19 @@ export function SquadTable({
         )
       }),
       columnHelper.accessor("adaptability", {
-        header: () => <span title="Adaptability">Adapt</span>,
+        header: () => <span title={t("Adaptability")}>{t("Adapt")}</span>,
         cell: (info) => `${info.getValue()}%`
       }),
       columnHelper.accessor("clubLoyalty", {
-        header: "Loyalty",
+        header: t("Loyalty"),
         cell: (info) => `${info.getValue()}%`
       }),
       columnHelper.accessor("morale", {
-        header: "Morale",
+        header: t("Morale"),
         cell: (info) => <MarkedValue value={info.getValue()} min={minMorale} />
       }),
       columnHelper.accessor("confidenceId", {
-        header: "Confidence",
+        header: t("Confidence"),
         cell: (info) => (
           <span
             className={info.row.original.confidenceProblem ? "text-danger" : ""}
@@ -130,7 +132,7 @@ export function SquadTable({
         )
       }),
       columnHelper.group({
-        header: "Items",
+        header: t("Items"),
         columns: [
           columnHelper.accessor((row) => row.items.shoes, {
             id: "shoes",
@@ -154,15 +156,15 @@ export function SquadTable({
       }),
 
       columnHelper.accessor("matchOrders", {
-        header: "Match Orders",
+        header: t("Match Orders"),
         cell: (info) => <MatchOrders status={info.getValue()} />
       }),
       columnHelper.accessor("fitness", {
-        header: "Fitness",
+        header: t("Fitness"),
         cell: (info) => info.getValue() && `${info.getValue()}%`
       }),
       columnHelper.accessor("fitnessBeforeMatch", {
-        header: "Fitness BM",
+        header: t("Fitness BM"),
         cell: (info) => <MarkedValue value={info.getValue()} min={minFitness} />
       })
     ];

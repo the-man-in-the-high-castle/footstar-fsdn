@@ -131,6 +131,10 @@ export enum PositionTypeGeneralEnum {
 
 // MANAGER
 
+export interface FsdnLoginUserDTO extends FsdnUserDTO {
+  userToken: string;
+}
+
 export interface FsdnUserDTO {
   userId: number;
   managerInClubs: FsdnClubManagerDTO[];

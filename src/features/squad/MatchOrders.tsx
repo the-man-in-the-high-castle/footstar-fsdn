@@ -5,21 +5,26 @@ import {
   faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 import { MatchOrdersStatuses } from "../../api/contracts";
 
 export function MatchOrders({ status }: { status?: MatchOrdersStatuses }) {
+  const { t } = useTranslation();
   switch (status) {
     case MatchOrdersStatuses.NOT_SHOWED:
       return (
         <FontAwesomeIcon
           icon={faEyeSlash}
           className="text-muted"
-          title="This player prefers not to show you his Individual Orders"
+          title={t("This player prefers not to show you his Individual Orders")}
         />
       );
     case MatchOrdersStatuses.NO_MANAGER_ORDERS:
       return (
-        <FontAwesomeIcon icon={faCircle} title="No manager individual orders" />
+        <FontAwesomeIcon
+          icon={faCircle}
+          title={t("No manager individual orders")}
+        />
       );
 
     case MatchOrdersStatuses.NOT_SET:
@@ -27,7 +32,7 @@ export function MatchOrders({ status }: { status?: MatchOrdersStatuses }) {
         <FontAwesomeIcon
           icon={faExclamationTriangle}
           className="text-danger"
-          title="The player has other individual orders set"
+          title={t("The player has other individual orders set")}
         />
       );
     case MatchOrdersStatuses.OK:
@@ -35,7 +40,7 @@ export function MatchOrders({ status }: { status?: MatchOrdersStatuses }) {
         <FontAwesomeIcon
           icon={faCircleCheck}
           className="text-success"
-          title="It's ok"
+          title={t("ok")}
         />
       );
   }
