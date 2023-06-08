@@ -1,3 +1,4 @@
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "./App";
 import { ClubAgeCategoryDTO } from "./api/contracts";
@@ -5,8 +6,9 @@ import Header from "./components/Header";
 import MainPage from "./components/MainPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import ErrorPage from "./components/error-page";
-import { Squad } from "./features/squad/Squad";
 import Login from "./features/user/Login";
+
+const Squad = React.lazy(() => import("./features/squad/Squad"));
 
 export const router = createBrowserRouter(
   [

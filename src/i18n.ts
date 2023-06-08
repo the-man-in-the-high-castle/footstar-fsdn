@@ -5,11 +5,12 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import HttpBackend, { HttpBackendOptions } from "i18next-http-backend";
 import { traduoraOptions } from "./i18n.traduora";
 
-let backendOptions = {};
-
-if (import.meta.env.VITE_TRANSLATION_TRADUORA === "true") {
-  backendOptions = traduoraOptions;
-}
+let backendOptions: HttpBackendOptions =
+  import.meta.env.VITE_TRANSLATION_TRADUORA === "true"
+    ? traduoraOptions
+    : {
+        loadPath: import.meta.env.BASE_URL + "/locales/{{lng}}/{{ns}}.json"
+      };
 
 i18n
   .use(HttpBackend)

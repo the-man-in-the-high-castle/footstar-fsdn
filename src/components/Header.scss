@@ -1,0 +1,6 @@
+#lang-nav-dropdown,
+#profile-nav-dropdown {
+  .dropdown-toggle::after {
+    display: none !important;
+  }
+}

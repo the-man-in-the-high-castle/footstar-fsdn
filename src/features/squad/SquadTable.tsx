@@ -156,7 +156,7 @@ export function SquadTable({
       }),
 
       columnHelper.accessor("matchOrders", {
-        header: t("Match Orders"),
+        header: t("Match orders"),
         cell: (info) => <MatchOrders status={info.getValue()} />
       }),
       columnHelper.accessor("fitness", {

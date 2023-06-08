@@ -22,3 +22,10 @@ export function loginApi(props: {
 }) {
   return client.postApi<FsdnLoginUserDTO>("login", undefined, props);
 }
+
+export function buildInLoginApi() {
+  return client.get<FsdnLoginUserDTO>(
+    "/community/fsdn_api.asp?method=buildInLogin",
+    { headers: { "x-fs-header": "on" } }
+  );
+}

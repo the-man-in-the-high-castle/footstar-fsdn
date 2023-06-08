@@ -15,11 +15,14 @@
   "Experience": "Experience",
   "Loyalty": "Loyalty",
   "Confidence": "Confidence",
-  "Match Orders": "Match Orders",
+  "Match orders": "Match orders",
   "Fitness BM": "Fitness BM",
   "Adaptability": "Adaptability",
   "Adapt": "Adapt",
   "User name": "User name",
   "Login.title": "Login",
-  "Login": "Login"
+  "Login": "Login",
+  "Forum code": "Forum code",
+  "Not showed": "Not showed",
+  "Not set": "Not set"
 }

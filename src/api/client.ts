@@ -17,16 +17,14 @@ export async function client<RT>(
     headers: { ...headers, ...customConfig.headers }
   };
 
-  if (body) {
-    config.body = body;
-  }
+  if (body) config.body = body;
 
   let data;
   try {
     const response = await window.fetch(endpoint, config);
+    data = await response.json();
 
     if (response.ok) {
-      data = await response.json();
       // Return a result object similar to Axios
       return {
         status: response.status,
@@ -37,6 +35,7 @@ export async function client<RT>(
     }
     throw new Error(response.statusText);
   } catch (err: any) {
+    console.log("client error", endpoint, JSON.stringify(err), data);
     return Promise.reject(err.message ? err.message : data);
   }
 }

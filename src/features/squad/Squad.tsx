@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react";
-import { Spinner } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { SquadClubKey } from "../../api/contracts";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Loading } from "../../components/Loading";
 import PageHeader from "../../components/PageHeader";
 import { SquadCard } from "./SquadCard";
 import {
@@ -51,11 +51,7 @@ export const Squad = ({ ageCategory = 0 }: { ageCategory?: number }) => {
     switch (squadStatus) {
       case "idle":
       case "loading":
-        return (
-          <div className="text-center">
-            <Spinner className="my-3" />
-          </div>
-        );
+        return <Loading />;
       case "succeeded":
         return (
           <>
@@ -76,3 +72,5 @@ export function toNumber(text: string | number | undefined | null) {
   const result = Number(text);
   return isNaN(result) ? undefined : result;
 }
+
+export default Squad;

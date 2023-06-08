@@ -15,12 +15,15 @@
   "Experience": "Doświadczenie",
   "Loyalty": "Lojalność",
   "Confidence": "Pewność siebie",
-  "Match Orders": "Zadania meczowe",
+  "Match orders": "Zadania meczowe",
   "Fitness BM": "Kondycja PM",
   "Adaptability": "Przystosowanie",
   "Adapt": "Przys.",
   "User name": "Użytkownik",
   "FSDN Password": "Hasło FSDN",
   "Login.title": "Logowanie",
-  "Login": "Zaloguj"
+  "Login": "Zaloguj",
+  "Forum code": "Kod na forum",
+  "Not showed": "Nie ujawnione",
+  "Not set": "Nie ustawione"
 }

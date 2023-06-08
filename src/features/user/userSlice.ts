@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FsdnLoginUserDTO, FsdnUserDTO } from "../../api/contracts";
 import { RootState } from "../../app/store";
 import { UserState } from "./user.model";
-import { fetchUserApi, loginApi } from "./userAPI";
+import { buildInLoginApi, fetchUserApi, loginApi } from "./userAPI";
 import { getUserToken, removeUserToken, setUserToken } from "./userToken";
 
 const initialState: UserState = {
@@ -56,6 +56,22 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
+    builder
+      .addCase(buildInLogin.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(buildInLogin.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.userId = action.payload.userId;
+        state.userToken = action.payload.userToken;
+        state.error = undefined;
+        state.managerInClubs = action.payload.managerInClubs;
+      })
+      .addCase(buildInLogin.rejected, (state, action) => {
+        console.log(action.error);
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   }
 });
 
@@ -74,7 +90,7 @@ export const fetchUser = createAsyncThunk<
 
   const { data } = await fetchUserApi({
     userId,
-    pid: import.meta.env.VITE_FSDN_PROGRAM_ID,
+    pid: Number(import.meta.env.VITE_FSDN_PROGRAM_ID),
     token
   });
 
@@ -92,7 +108,7 @@ export const login = createAsyncThunk<
 >("user/login", async (props) => {
   const { data } = await loginApi({
     ...props,
-    pid: import.meta.env.VITE_FSDN_PROGRAM_ID
+    pid: Number(import.meta.env.VITE_FSDN_PROGRAM_ID)
   });
 
   setUserToken({ userToken: data.userToken, userId: data.userId });
@@ -104,6 +120,24 @@ export const login = createAsyncThunk<
     )
   };
 });
+
+export const buildInLogin = createAsyncThunk<FsdnLoginUserDTO>(
+  "user/buildInLogin",
+  async () => {
+    const { data } = await buildInLoginApi();
+
+    console.log("data", data);
+
+    setUserToken({ userToken: data.userToken, userId: data.userId });
+
+    return {
+      ...data,
+      managerInClubs: data.managerInClubs.sort((a, b) =>
+        a.clubName.localeCompare(b.clubName)
+      )
+    };
+  }
+);
 
 export default userSlice.reducer;
 

@@ -3,6 +3,7 @@ import { SquadItem } from "./Squad.model";
 
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { t } from "i18next";
 import { useMemo } from "react";
 import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
@@ -34,8 +35,8 @@ export function SquadForumCode({
   if (!players) return <></>;
   return (
     <Card className="mb-3 ">
-      <Card.Header className="bg-primary text-light  bg-gradient">
-        Forum code{" "}
+      <Card.Header className="bg-primary text-light bg-gradient">
+        {t("Forum code") + " "}
         <Button onClick={copyToClipboard} variant="primary" size="sm">
           <FontAwesomeIcon icon={faCopy} />
         </Button>

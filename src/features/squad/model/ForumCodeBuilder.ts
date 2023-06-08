@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import {
   MatchItemDTO,
   MatchOrdersStatuses,
@@ -15,7 +16,9 @@ class ForumCodeBuilder {
     return this.head() + this.body(props);
   }
   head() {
-    return "[b]Name | Fitness | Morale | Confidence | Match orders | Items[/b]\n";
+    return `[b]${t("Name")} | ${t("Fitness")} | ${t("Morale")} | ${t(
+      "Confidence"
+    )} | ${t("Match orders")} | ${t("Items")}[/b]\n`;
   }
 
   body({
@@ -60,11 +63,11 @@ class ForumCodeBuilder {
     function matchOrders(status: MatchOrdersStatuses | undefined): string {
       switch (status) {
         case MatchOrdersStatuses.NOT_SHOWED:
-          return "[b]Not showed[/b]";
+          return `[b]${t("Not showed")}[/b]`;
         case MatchOrdersStatuses.NOT_SET:
-          return "[b]Not set[/b]";
+          return `[b]${t("Not set")}[/b]`;
         case MatchOrdersStatuses.OK:
-          return "ok";
+          return t("ok");
       }
       return "";
     }

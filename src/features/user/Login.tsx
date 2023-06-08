@@ -3,14 +3,18 @@ import { Button, Card, Form, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Loading } from "../../components/Loading";
 import {
+  buildInLogin,
   login,
   selectIsLogged,
   selectUserError,
   selectUserStatus
 } from "./userSlice";
 
-export default function Login() {
+const fsBuildIn = import.meta.env.VITE_FSBUILDIN === "true";
+
+function LoginComponent() {
   const { t } = useTranslation();
   const userStatus = useAppSelector(selectUserStatus);
 
@@ -88,3 +92,36 @@ export default function Login() {
     </Card>
   );
 }
+
+function BuildInLogin() {
+  const userStatus = useAppSelector(selectUserStatus);
+  const dispatch = useAppDispatch();
+  const error = useAppSelector(selectUserError);
+  const navigate = useNavigate();
+
+  const isLogged = useAppSelector(selectIsLogged);
+  useEffect(() => {
+    if (isLogged) navigate("/");
+  }, [isLogged, navigate]);
+
+  useEffect(() => {
+    dispatch(buildInLogin());
+  }, [dispatch]);
+
+  if (userStatus !== "failed") return <Loading />;
+  return (
+    <>
+      {error && (
+        <div className="form-group">
+          <div className="alert alert-danger py-2" role="alert">
+            {error}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+const Login = fsBuildIn ? BuildInLogin : LoginComponent;
+
+export default Login;
