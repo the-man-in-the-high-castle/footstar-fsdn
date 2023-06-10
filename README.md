@@ -1,5 +1,10 @@
-# footstar-fsdn
+# FootStar Development Network (FSDN)
 
+FootStar Development Network is a development program to assist and aggregate all developers that want to create external tools to support [Footstar](https://www.footstar.org) users to manage their teams and players.
+
+## Footstar 
+Footstar is a free online football simulator where you are the player! Join a club, set up trainings, interact with your team mates, give interviews, become the best football player in the world!
+https://www.footstar.org
 
 ## Scripts
 
