@@ -75,7 +75,9 @@ class ForumCodeBuilder {
     function itemValue(item: MatchItemDTO | undefined, toCheck = true) {
       const value = item?.bonus ?? 0;
 
-      return toCheck && value < minItems ? bold(true, value) : valueText(value);
+      return toCheck && value < minItems
+        ? bold(true, valueText(value))
+        : valueText(value);
 
       function valueText(value: number) {
         if (!value) return "";
